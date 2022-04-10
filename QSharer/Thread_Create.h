@@ -18,7 +18,8 @@ protected:
 	void run(void);
 
 private: 
-
+	const char *QStrToChar(QString str);
+	
 	void initHost(void);
 	void stopPrevHost(void);
 	void setHost(QString, QString);

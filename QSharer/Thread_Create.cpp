@@ -1,34 +1,44 @@
 #include "stdafx.h"
 #include "Thread_Create.h"
 
-
 Thread_Create::Thread_Create(QString ssid, QString key) : QThread()
-{ 
+{
 	SSID = ssid;
-	KEY = key;  
+	KEY = key;
 
-	//int t = sf.InitSharing();
+	// int t = sf.InitSharing();
 }
-
 
 Thread_Create::~Thread_Create()
 {
 	hf.ExitHostedNetWork();
-	//sf.ExitSharing();
+	// sf.ExitSharing();
 }
 
 void Thread_Create::run(void)
-{ 
+{
 
 	initHost();
 	stopPrevHost();
 	setHost(SSID, KEY);
 	startHost();
-	shareHost(); 
-	  
-	int PeerNum = hf.GetPeerNumber();
-	if (PeerNum >= 0) emit cSuccess(PeerNum);
+	shareHost();
 
+	int PeerNum = hf.GetPeerNumber();
+	if (PeerNum >= 0)
+		emit cSuccess(PeerNum);
+}
+
+const char *Thread_Create::QStrToChar(QString str)
+{
+	QByteArray ba = str.toLatin1();
+	char *chStr = (char *)malloc(ba.length() + 1);
+
+	memset(chStr, 0, ba.length());
+	memcpy(chStr, ba.data(), ba.length());
+	chStr[ba.length()] = '\0';
+
+	return chStr;
 }
 
 void Thread_Create::initHost(void)
@@ -36,17 +46,15 @@ void Thread_Create::initHost(void)
 
 	if (hf.InitHostedNetWork() != 0)
 	{
-		emit FailedList_Create(0);    //throw QString("Failed to initiate hosted network!");  
+		emit FailedList_Create(0); // throw QString("Failed to initiate hosted network!");
 		terminate();
-
 	}
 
 	if (hf.HostedNetworkOn() == -2)
 	{
-		emit FailedList_Create(1);    //throw QString("Wlan hosted network unavailable!"); 
+		emit FailedList_Create(1); // throw QString("Wlan hosted network unavailable!");
 		terminate();
-	} 
-
+	}
 }
 
 void Thread_Create::stopPrevHost(void)
@@ -72,10 +80,9 @@ void Thread_Create::stopPrevHost(void)
 
 	if (timeOut || stopFailed)
 	{
-		emit FailedList_Create(2);    //throw QString("Failed to stop previous hosted network!");
+		emit FailedList_Create(2); // throw QString("Failed to stop previous hosted network!");
 		terminate();
 	}
-
 }
 
 void Thread_Create::setHost(QString ssid, QString key)
@@ -85,52 +92,47 @@ void Thread_Create::setHost(QString ssid, QString key)
 
 	if (hf.AllowHostedNetWork(true) != 0)
 	{
-		emit FailedList_Create(3);		//throw QString("Failed to allow hosted network!");
+		emit FailedList_Create(3); // throw QString("Failed to allow hosted network!");
 		terminate();
 	}
 
 	if (hf.SetSSID(wifiname) != 0)
 	{
-		emit FailedList_Create(4);    //throw QString("Failed to get ssid!");
+		emit FailedList_Create(4); // throw QString("Failed to get ssid!");
 		terminate();
 	}
 
 	if (hf.SetKEY(password) != 0)
 	{
-		emit FailedList_Create(5);    //throw QString("Failed to get key!");
+		emit FailedList_Create(5); // throw QString("Failed to get key!");
 		terminate();
 	}
-
 }
 
 void Thread_Create::startHost(void)
 {
 	if (hf.StartHostedNetWork() != 0)
 	{
-		emit FailedList_Create(6);    //throw QString("Failed to start hosted network!"); 
+		emit FailedList_Create(6); // throw QString("Failed to start hosted network!");
 		terminate();
 	}
-
 }
 
-
-//void Thread_Create::unsharePrevHost(void)
+// void Thread_Create::unsharePrevHost(void)
 //{
 //	if (false)
 //	{
-//		emit FailedList_Create(7);    //throw QString("Failed to sharer hosted network!"); 
+//		emit FailedList_Create(7);    //throw QString("Failed to sharer hosted network!");
 //		terminate();
 //	}
 //
-//}
-
+// }
 
 void Thread_Create::shareHost(void)
 {
 	if (sf.StartSharing() != 0)
 	{
-		emit FailedList_Create(7);    //throw QString("Failed to sharer hosted network!"); 
+		emit FailedList_Create(7); // throw QString("Failed to sharer hosted network!");
 		terminate();
 	}
 }
- 

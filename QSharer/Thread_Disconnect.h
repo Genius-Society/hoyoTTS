@@ -19,7 +19,8 @@ signals:
 	void dSuccess(void);
 
 private: 
-
+	const char *QStrToChar(QString str);
+	
 	void stopHost(QString); 
 	void unshareHost(void);
 

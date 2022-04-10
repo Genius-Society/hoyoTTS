@@ -1,6 +1,6 @@
 #pragma once
 
-#include<iostream>
+#include <iostream>
 using namespace std;
 
 #include <Sensapi.h>
@@ -11,13 +11,12 @@ using namespace std;
 
 class HostNetlib
 {
-public:  
-	
+public:
 	int InitHostedNetWork(void);
 	int ExitHostedNetWork(void);
 	int StartHostedNetWork(void);
-	int StopHostedNetWork(void); 
-	int HostedNetworkOn(void); 
+	int StopHostedNetWork(void);
+	int HostedNetworkOn(void);
 	int AllowHostedNetWork(bool);
 	int SetKEY(const char *);
 	int SetSSID(const char *);
@@ -27,8 +26,9 @@ public:
 	QString GetSSID(void);
 
 private:
-	 
+	bool isFormatStr(const char *s);
+	bool isKEYLength(const char *s);
+	bool isSSIDLength(const char *s);
+
 	HANDLE hClient;
-
 };
-

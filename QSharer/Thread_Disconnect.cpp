@@ -26,6 +26,18 @@ void Thread_Disconnect::run(void)
 	emit dSuccess();
 }
 
+const char *Thread_Disconnect::QStrToChar(QString str)
+{
+	QByteArray ba = str.toLatin1();
+	char *chStr = (char *)malloc(ba.length() + 1);
+
+	memset(chStr, 0, ba.length());
+	memcpy(chStr, ba.data(), ba.length());
+	chStr[ba.length()] = '\0';
+
+	return chStr;
+}
+
 void Thread_Disconnect::stopHost(QString key)
 { 
 

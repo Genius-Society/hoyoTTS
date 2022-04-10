@@ -12,6 +12,23 @@ Sharing::~Sharing()
 {
 }
 
+BYTE Sharing::bit(int p)
+{
+	switch (p)
+	{
+	case 1:  return 0x01; break;
+	case 2:  return 0x02; break;
+	case 3:  return 0x04; break;
+	case 4:  return 0x08; break;
+	case 5:  return 0x10; break;
+	case 6:  return 0x20; break;
+	case 7:  return 0x40; break;
+	case 8:  return 0x80; break;
+	default: return 0x00; break;
+	}
+
+}
+
 void Sharing::InitCon(void)
 {
 	CoInitialize(NULL);

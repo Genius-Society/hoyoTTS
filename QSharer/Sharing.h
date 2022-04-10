@@ -14,8 +14,8 @@ private:
 
 	bool isDest(QString, int);
 	bool isSource(QString, int);
-
-	//void InitSharing(INetSharingManager *, INetSharingEveryConnectionCollection *, IUnknown *, IEnumVARIANT *, INetConnection *, INetSharingConfiguration  *, VARIANT);
+	
+	BYTE bit(int);
 	void InitCon(void);
 	void ExitCon(void);
 
