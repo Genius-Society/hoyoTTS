@@ -1,11 +1,10 @@
-#include "stdafx.h"
-#include "qsharer.h" 
-
+#include "Sharing.h" 
 #include "Thread_Create.h"
 #include "Thread_Disconnect.h"
 #include "Timer_Monitor.h"
+#include "QCommonDelegate.h" 
+#include "qsharer.h" 
 
-#include "QCommonDelegate.h"
 
 QSharer::QSharer(QWidget *parent) : QMainWindow(parent)
 {  

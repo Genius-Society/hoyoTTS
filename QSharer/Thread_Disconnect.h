@@ -1,5 +1,8 @@
-#pragma once
-//#include "HostNetlib.h" 
+#pragma once 
+#include <QtWidgets>
+#include "HostNetlib.h" 
+#include "Sharing.h" 
+
 
 class Thread_Disconnect : public QThread
 {

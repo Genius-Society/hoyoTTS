@@ -1,5 +1,5 @@
 #pragma once
-#include "NetCon.h" 
+#include <QtWidgets>
 
 class Sharing
 {

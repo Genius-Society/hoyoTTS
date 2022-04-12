@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "HostNetlib.h"
 
 bool HostNetlib::isFormatStr(const char *s)

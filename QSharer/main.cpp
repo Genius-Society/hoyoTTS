@@ -1,6 +1,6 @@
-#include "stdafx.h"
 #include "qsharer.h"
 #include <QtWidgets/QApplication>
+
 
 #ifdef QT_NO_DEBUG
 Q_IMPORT_PLUGIN(QWindowsIntegrationPlugin);

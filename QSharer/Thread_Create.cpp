@@ -1,5 +1,5 @@
-#include "stdafx.h"
 #include "Thread_Create.h"
+
 
 Thread_Create::Thread_Create(QString ssid, QString key) : QThread()
 {

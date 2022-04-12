@@ -1,4 +1,6 @@
 #pragma once
+#include <QtWidgets>
+
 class oui
 {
 public:

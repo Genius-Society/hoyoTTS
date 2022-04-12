@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "oui.h" 
 
 oui::oui()
@@ -238,7 +237,7 @@ QString oui::Translate(QString pMac){
 	case 0x741865: cid = "Shanghai DareGlobal Technologies Co.,Ltd"; break;
 	case 0x0084ED: cid = "Private"; break;
 	case 0xDCDC07: cid = "TRP Systems BV"; break;
-	case 0x080A4E: cid = "Planet Bingo® �?3rd Rock Gaming®"; break;
+	case 0x080A4E: cid = "Planet Bingo® �?3rd Rock Gaming®"; break;
 	case 0x0C1A10: cid = "Acoustic Stream"; break;
 	case 0xE4A387: cid = "Control Solutions LLC"; break;
 	case 0xDC82F6: cid = "iPort"; break;
@@ -4605,7 +4604,7 @@ QString oui::Translate(QString pMac){
 	case 0x7CFF4D: cid = "AVM Audiovisuelles Marketing und Computersysteme GmbH"; break;
 	case 0x7470FD: cid = "Intel Corporate"; break;
 	case 0x689861: cid = "Beacon Inc"; break;
-	case 0x88B362: cid = "Nokia Shanghai Bell Co. Ltd.�?"; break;
+	case 0x88B362: cid = "Nokia Shanghai Bell Co. Ltd.�?"; break;
 	case 0x1CA0B8: cid = "Hon Hai Precision Ind. Co., Ltd."; break;
 	case 0x3C479B: cid = "Theissen Training Systems, Inc."; break;
 	case 0x8CF773: cid = "Nokia"; break;
@@ -10393,7 +10392,7 @@ QString oui::Translate(QString pMac){
 	case 0x589B0B: cid = "Shineway Technologies, Inc."; break;
 	case 0xA48CDB: cid = "Lenovo"; break;
 	case 0x4062B6: cid = "Tele system communication"; break;
-	case 0x3C2C94: cid = "杭州德澜科技有限公司（HangZhou Delan Technology Co.,Ltd�?"; break;
+	case 0x3C2C94: cid = "杭州德澜科技有限公司（HangZhou Delan Technology Co.,Ltd�?"; break;
 	case 0x78312B: cid = "zte corporation"; break;
 	case 0xC035C5: cid = "Prosoft Systems LTD"; break;
 	case 0xF8B2F3: cid = "GUANGZHOU BOSMA TECHNOLOGY CO.,LTD"; break;
@@ -14883,7 +14882,7 @@ QString oui::Translate(QString pMac){
 	case 0x8C1CDA: cid = "IEEE Registration Authority"; break;
 	case 0xE8D099: cid = "Fiberhome Telecommunication Technologies Co.,LTD"; break;
 	case 0xD0B214: cid = "PoeWit Inc"; break;
-	case 0x0847D0: cid = "Nokia Shanghai Bell Co. Ltd.�?"; break;
+	case 0x0847D0: cid = "Nokia Shanghai Bell Co. Ltd.�?"; break;
 	case 0x1869DA: cid = "China Mobile Group Device Co.,Ltd."; break;
 	case 0x60D21C: cid = "Sunnovo International Limited"; break;
 	case 0xA492CB: cid = "Nokia"; break;
@@ -14899,8 +14898,8 @@ QString oui::Translate(QString pMac){
 	case 0xFCA621: cid = "Samsung Electronics Co.,Ltd"; break;
 	case 0x60D02C: cid = "Ruckus Wireless"; break;
 	case 0x8CF228: cid = "MERCURY COMMUNICATION TECHNOLOGIES CO.,LTD."; break;
-	case 0x0080B6: cid = "Mercury Systems �?Trusted Mission Solutions, Inc."; break;
-	case 0xC8778B: cid = "Mercury Systems �?Trusted Mission Solutions, Inc."; break;
+	case 0x0080B6: cid = "Mercury Systems �?Trusted Mission Solutions, Inc."; break;
+	case 0xC8778B: cid = "Mercury Systems �?Trusted Mission Solutions, Inc."; break;
 	case 0x80B32A: cid = "UK Grid Solutions Ltd"; break;
 	case 0x0009DF: cid = "Vestel Elektronik San ve Tic. A.Ş."; break;
 	case 0xBC5FF6: cid = "MERCURY COMMUNICATION TECHNOLOGIES CO.,LTD."; break;
@@ -16717,7 +16716,7 @@ QString oui::Translate(QString pMac){
 	case 0x001D57: cid = "CAETEC Messtechnik"; break;
 	case 0x001D51: cid = "Babcock & Wilcox Power Generation Group, Inc"; break;
 	case 0x001D47: cid = "Covote GmbH & Co KG"; break;
-	case 0x001D40: cid = " Intel �?GE Care Innovations LLC"; break;
+	case 0x001D40: cid = " Intel �?GE Care Innovations LLC"; break;
 	case 0x001D34: cid = "SYRIS Technology Corp"; break;
 	case 0x001D2D: cid = "Pylone, Inc."; break;
 	case 0x001B2A: cid = "Cisco Systems, Inc"; break;
@@ -20488,7 +20487,7 @@ QString oui::Translate(QString pMac){
 	case 0xA07771: cid = "Vialis BV"; break;
 	case 0xD0BD01: cid = "DS International"; break;
 	case 0xC0C569: cid = "SHANGHAI LYNUC CNC TECHNOLOGY CO.,LTD"; break;
-	case 0x200E95: cid = "IEC �?TC9 WG43"; break;
+	case 0x200E95: cid = "IEC �?TC9 WG43"; break;
 	case 0xE0DB88: cid = "Open Standard Digital-IF Interface for SATCOM Systems"; break;
 	case 0xD86194: cid = "Objetivos y Sevicios de Valor Añadido"; break;
 	case 0x589CFC: cid = "FreeBSD Foundation"; break;

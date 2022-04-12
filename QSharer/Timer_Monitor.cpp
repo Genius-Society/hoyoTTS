@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Timer_Monitor.h"
 
 

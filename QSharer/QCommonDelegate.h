@@ -1,4 +1,6 @@
 #pragma once
+#include <QStyledItemDelegate>
+
 class QCommonDelegate : public QStyledItemDelegate
 {
 

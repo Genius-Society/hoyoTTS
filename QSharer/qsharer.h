@@ -1,8 +1,10 @@
 #ifndef QSHARER_H
 #define QSHARER_H
-
-#include <QtWidgets/QMainWindow>
+#pragma once
+#include <QtWidgets>
+#include "HostNetlib.h" 
 #include "oui.h"
+
 
 class QSharer : public QMainWindow
 {

@@ -1,5 +1,4 @@
-#include "stdafx.h"  
-
+#include "NetCon.h" 
 #include "Sharing.h"
  
 

@@ -1,5 +1,7 @@
 #pragma once
-//#include "HostNetlib.h" 
+#include <QtWidgets>
+#include "HostNetlib.h" 
+
 
 class Timer_Monitor : public QTimer
 {

@@ -1,4 +1,5 @@
 #pragma once
+#include <QtWidgets>
 
 #include <iostream>
 using namespace std;

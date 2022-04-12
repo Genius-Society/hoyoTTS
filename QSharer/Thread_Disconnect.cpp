@@ -1,4 +1,3 @@
-#include "stdafx.h"
 #include "Thread_Disconnect.h"
 
 
