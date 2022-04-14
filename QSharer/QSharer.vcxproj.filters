@@ -96,4 +96,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources\Icon.rc" />
+  </ItemGroup>
 </Project>

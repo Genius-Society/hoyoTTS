@@ -1,15 +1,14 @@
-#pragma once 
+#pragma once
 #include <QtWidgets>
-#include "HostNetlib.h" 
-#include "Sharing.h" 
-
+#include "HostNetlib.h"
+#include "Sharing.h"
 
 class Thread_Create : public QThread
 {
 	Q_OBJECT
 
 public:
-	Thread_Create(QString, QString);
+	Thread_Create(QString, QString, QString);
 	~Thread_Create();
 
 signals:
@@ -17,12 +16,10 @@ signals:
 	void cSuccess(int);
 
 protected:
-
 	void run(void);
 
-private: 
-	const char *QStrToChar(QString str);
-	
+private:
+	const char *QStrToChar(QString);
 	void initHost(void);
 	void stopPrevHost(void);
 	void setHost(QString, QString);
@@ -30,11 +27,10 @@ private:
 	void unsharePrevHost(void);
 	void shareHost(void);
 
-	HostNetlib hf;
-	Sharing sf;
+	HostNetlib *hf;
+	Sharing *sf;
 
 	QString SSID;
-	QString KEY; 
-
+	QString KEY;
+	QString SrcDevice;
 };
-

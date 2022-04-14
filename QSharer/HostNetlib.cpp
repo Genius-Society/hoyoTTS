@@ -1,5 +1,17 @@
 #include "HostNetlib.h"
 
+HostNetlib::HostNetlib()
+{
+	InitHostedNetWork();
+	StartHostedNetWork();
+	StopHostedNetWork();
+}
+
+HostNetlib::~HostNetlib()
+{
+	ExitHostedNetWork();
+}
+
 bool HostNetlib::isFormatStr(const char *s)
 {
 	bool b = true;

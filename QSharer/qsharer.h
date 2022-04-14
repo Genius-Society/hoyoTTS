@@ -2,9 +2,9 @@
 #define QSHARER_H
 #pragma once
 #include <QtWidgets>
-#include "HostNetlib.h" 
+#include "Sharing.h"
+#include "HostNetlib.h"
 #include "oui.h"
-
 
 class QSharer : public QMainWindow
 {
@@ -14,6 +14,7 @@ public:
 	QSharer(QWidget *parent = 0);
 	~QSharer();
 
+private:
 	QWidget *centralWidget;
 	QTabWidget *tabWidget;
 	QWidget *HotspotTab;
@@ -26,36 +27,31 @@ public:
 	QLineEdit *PassEdit;
 	QPushButton *DisconnectButton;
 	QCheckBox *HideCheck;
+	QLabel *comboLabel;
+	QComboBox *comboBox;
 	QWidget *DeviceTab;
 	QTableView *listView;
-
 	QTimer *Monitor;
 
-private:
-	//Ui::QSharerClass ui;
-
-	HostNetlib hf;
-	oui ouf;
+	Sharing *sf;
+	HostNetlib *hf;
+	oui *ouf;
 
 	void setupUi(QMainWindow *);
 	void retranslateUi(QMainWindow *);
 	void customizeUi(QMainWindow *);
 
-public slots: 
-
-    void createStart(void);
+public slots:
+	void LoadSrcDevices(int);
+	void createStart(void);
 	void createFailed(int);
-	void createFinished(int); 
-
+	void createFinished(int);
 	void discStart(void);
 	void discFailed(int);
 	void discFinished(void);
-
 	void HidePass(bool);
-
 	void UpdClients(QStringList);
 	void PassMinLength(QString);
-
 };
 
 #endif // QSHARER_H

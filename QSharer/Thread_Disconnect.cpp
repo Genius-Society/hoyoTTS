@@ -1,26 +1,21 @@
 #include "Thread_Disconnect.h"
 
-
 Thread_Disconnect::Thread_Disconnect(QString key) : QThread()
 {
 	KEY = key;
-
-	hf.InitHostedNetWork();
-	//sf.InitSharing();
+	hf = new HostNetlib();
+	sf = new Sharing();
 }
-
 
 Thread_Disconnect::~Thread_Disconnect()
 {
-	hf.ExitHostedNetWork();
-	//sf.ExitSharing();
+	hf->ExitHostedNetWork();
 }
-
 
 void Thread_Disconnect::run(void)
 {
 	stopHost(KEY);
-	unshareHost(); 
+	unshareHost();
 
 	emit dSuccess();
 }
@@ -38,7 +33,7 @@ const char *Thread_Disconnect::QStrToChar(QString str)
 }
 
 void Thread_Disconnect::stopHost(QString key)
-{ 
+{
 
 	bool isIDLE = false;
 	bool stopFailed = false;
@@ -48,39 +43,38 @@ void Thread_Disconnect::stopHost(QString key)
 
 	do
 	{
-		if (hf.StopHostedNetWork() != 0)
+		if (hf->StopHostedNetWork() != 0)
 		{
 			stopFailed = true;
 			break;
 		}
 		TryTimes++;
 		timeOut = (TryTimes > MaxTryTimes);
-		isIDLE = (hf.HostedNetworkOn() == -3);
+		isIDLE = (hf->HostedNetworkOn() == -3);
 
 	} while (!isIDLE && !timeOut);
 
 	if (timeOut || stopFailed)
 	{
-		emit FailedList_Dis(0);    //throw QString("Failed to stop hosted network!");
+		emit FailedList_Dis(0); // throw QString("Failed to stop hosted network!");
 		terminate();
 	}
 
 	const char *password = QStrToChar(key);
 
-	if (hf.SetKEY(password) != 0)
+	if (hf->SetKEY(password) != 0)
 	{
-		emit FailedList_Dis(1);    //throw QString("Failed to reset key!");
+		emit FailedList_Dis(1); // throw QString("Failed to reset key!");
 		terminate();
 	}
-
 }
 
 void Thread_Disconnect::unshareHost()
 {
 
-	if (sf.StopSharing() != 0){
-		emit FailedList_Dis(2);    //throw QString("Failed to unshare hosted network!");
+	if (sf->StopSharing() != 0)
+	{
+		emit FailedList_Dis(2); // throw QString("Failed to unshare hosted network!");
 		terminate();
 	}
-
 }

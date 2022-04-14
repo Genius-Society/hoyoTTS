@@ -13,6 +13,9 @@ using namespace std;
 class HostNetlib
 {
 public:
+	HostNetlib();
+	~HostNetlib();
+
 	int InitHostedNetWork(void);
 	int ExitHostedNetWork(void);
 	int StartHostedNetWork(void);
@@ -30,6 +33,5 @@ private:
 	bool isFormatStr(const char *s);
 	bool isKEYLength(const char *s);
 	bool isSSIDLength(const char *s);
-
 	HANDLE hClient;
 };

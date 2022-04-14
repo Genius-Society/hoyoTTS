@@ -1,15 +1,13 @@
-#pragma once 
+#pragma once
 #include <QtWidgets>
-#include "HostNetlib.h" 
-#include "Sharing.h" 
-
+#include "HostNetlib.h"
+#include "Sharing.h"
 
 class Thread_Disconnect : public QThread
 {
 	Q_OBJECT
 
 protected:
-
 	void run(void);
 
 public:
@@ -21,16 +19,14 @@ signals:
 	void FailedList_Dis(int);
 	void dSuccess(void);
 
-private: 
+private:
 	const char *QStrToChar(QString str);
-	
-	void stopHost(QString); 
+
+	void stopHost(QString);
 	void unshareHost(void);
 
-	HostNetlib hf;
-	Sharing sf;
+	HostNetlib *hf;
+	Sharing *sf;
 
 	QString KEY;
-
 };
-

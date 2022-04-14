@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "qtwidgets": "cpp"
+        "qtwidgets": "cpp",
+        "ostream": "cpp",
+        "iostream": "cpp"
     }
 }
