@@ -16,7 +16,7 @@ if not exist %BUILD_DIR% md %BUILD_DIR%
 
 cd QSharer
 
-%QT_DIR%\bin\qmake.exe %SRC_DIR%\QSharer.pro -spec win32-msvc2015  "CONFIG+=debug" "CONFIG+=console"
+%QT_DIR%\bin\qmake.exe %SRC_DIR%\QSharer.pro -spec win32-msvc2015 "CONFIG+=debug" "CONFIG+=console"
 if exist %BUILD_DIR%\Debug\QSharer.exe del %BUILD_DIR%\Debug\QSharer.exe
 nmake Debug
 if not exist %BUILD_DIR%\Debug\Qt5Cored.dll (
