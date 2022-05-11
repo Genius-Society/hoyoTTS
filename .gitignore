@@ -122,3 +122,4 @@ qsharer/Release/*
 qsharer/Debug/*
 Release/*
 Debug/*
+.vs/*
