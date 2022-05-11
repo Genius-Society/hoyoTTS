@@ -118,3 +118,7 @@ qsharer/Release/qsharer.tlog/rcc.read.1u.tlog
 qsharer/Release/qsharer.tlog/rcc.write.1u.tlog
 qsharer/Release/qsharer.tlog/uic.read.1u.tlog
 qsharer/Release/qsharer.tlog/uic.write.1u.tlog
+qsharer/Release/*
+qsharer/Debug/*
+Release/*
+Debug/*

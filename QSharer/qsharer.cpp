@@ -76,10 +76,10 @@ void QSharer::setupUi(QMainWindow *QSharerClass)
 	listView->setGeometry(QRect(20, 20, 441, 220)); // 20, 20, 441, 271
 
 	comboLabel = new QLabel(DeviceTab);
-	comboLabel->setGeometry(QRect(20, 260, 150, 22));
+	comboLabel->setGeometry(QRect(20, 250, 150, 22));
 	comboBox = new QComboBox(DeviceTab);
 	comboBox->setObjectName(QStringLiteral("comboBox"));
-	comboBox->setGeometry(QRect(160, 260, 300, 22));
+	comboBox->setGeometry(QRect(20, 280, 300, 22));
 	LoadSrcDevices(1);
 
 	tabWidget->addTab(DeviceTab, QString());

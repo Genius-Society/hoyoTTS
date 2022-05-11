@@ -23,17 +23,24 @@
       <Extensions>qrc;*</Extensions>
       <ParseFiles>false</ParseFiles>
     </Filter>
-    <Filter Include="Generated Files">
-      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
-      <Extensions>moc;h;cpp</Extensions>
-      <SourceControlFiles>False</SourceControlFiles>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="qsharer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="HostNetlib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="oui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QCommonDelegate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Sharing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Thread_Create.cpp">
@@ -45,18 +52,6 @@
     <ClCompile Include="Timer_Monitor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Sharing.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="QCommonDelegate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="oui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="HostNetlib.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="qsharer.h">
@@ -65,13 +60,13 @@
     <QtMoc Include="QCommonDelegate.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="Thread_Create.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
     <QtMoc Include="Thread_Disconnect.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Timer_Monitor.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-    <QtMoc Include="Thread_Create.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -81,22 +76,19 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <QtRcc Include="qsharer.qrc">
-      <Filter>Resource Files</Filter>
-    </QtRcc>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Sharing.h">
+    <ClInclude Include="HostNetlib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="oui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="HostNetlib.h">
+    <ClInclude Include="Sharing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Resources\Icon.rc" />
+    <ResourceCompile Include="Resources\Icon.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
