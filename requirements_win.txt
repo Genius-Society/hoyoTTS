@@ -14,7 +14,7 @@ scipy==1.7.3
 sounddevice==0.4.5
 SoundFile==0.10.3.post1
 starlette==0.19.1
-tqdm==4.63.0
+tqdm==4.66.3
 rich
 loguru
 torchcrepe
