@@ -1,8 +1,6 @@
 import torch
-from torch.nn import functional as F
-
 import numpy as np
-
+from torch.nn import functional as F
 
 DEFAULT_MIN_BIN_WIDTH = 1e-3
 DEFAULT_MIN_BIN_HEIGHT = 1e-3
@@ -21,6 +19,7 @@ def piecewise_rational_quadratic_transform(
     min_bin_height=DEFAULT_MIN_BIN_HEIGHT,
     min_derivative=DEFAULT_MIN_DERIVATIVE,
 ):
+
     if tails is None:
         spline_fn = rational_quadratic_spline
         spline_kwargs = {}
@@ -76,22 +75,21 @@ def unconstrained_rational_quadratic_spline(
     else:
         raise RuntimeError("{} tails are not implemented.".format(tails))
 
-    (
-        outputs[inside_interval_mask],
-        logabsdet[inside_interval_mask],
-    ) = rational_quadratic_spline(
-        inputs=inputs[inside_interval_mask],
-        unnormalized_widths=unnormalized_widths[inside_interval_mask, :],
-        unnormalized_heights=unnormalized_heights[inside_interval_mask, :],
-        unnormalized_derivatives=unnormalized_derivatives[inside_interval_mask, :],
-        inverse=inverse,
-        left=-tail_bound,
-        right=tail_bound,
-        bottom=-tail_bound,
-        top=tail_bound,
-        min_bin_width=min_bin_width,
-        min_bin_height=min_bin_height,
-        min_derivative=min_derivative,
+    outputs[inside_interval_mask], logabsdet[inside_interval_mask] = (
+        rational_quadratic_spline(
+            inputs=inputs[inside_interval_mask],
+            unnormalized_widths=unnormalized_widths[inside_interval_mask, :],
+            unnormalized_heights=unnormalized_heights[inside_interval_mask, :],
+            unnormalized_derivatives=unnormalized_derivatives[inside_interval_mask, :],
+            inverse=inverse,
+            left=-tail_bound,
+            right=tail_bound,
+            bottom=-tail_bound,
+            top=tail_bound,
+            min_bin_width=min_bin_width,
+            min_bin_height=min_bin_height,
+            min_derivative=min_derivative,
+        )
     )
 
     return outputs, logabsdet

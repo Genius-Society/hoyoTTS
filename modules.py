@@ -1,15 +1,14 @@
 import math
 import torch
-from torch import nn
-from torch.nn import functional as F
-
-from torch.nn import Conv1d
-from torch.nn.utils import weight_norm, remove_weight_norm
-
 import commons
-from commons import init_weights, get_padding
-from transforms import piecewise_rational_quadratic_transform
 from attentions import Encoder
+from torch import nn
+from torch.nn import Conv1d
+from torch.nn import functional as F
+from torch.nn.utils import weight_norm, remove_weight_norm
+from transforms import piecewise_rational_quadratic_transform
+from commons import init_weights, get_padding
+
 
 LRELU_SLOPE = 0.1
 
@@ -83,7 +82,7 @@ class ConvReluNorm(nn.Module):
 
 class DDSConv(nn.Module):
     """
-    Dilated and Depth-Separable Convolution
+    Dialted and Depth-Separable Convolution
     """
 
     def __init__(self, channels, kernel_size, n_layers, p_dropout=0.0):
@@ -595,5 +594,3 @@ class TransformerCouplingLayer(nn.Module):
             return x, logdet
         else:
             return x
-            logs = torch.cat([logs0, logs1], 1)
-            return x, m, logs

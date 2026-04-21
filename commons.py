@@ -14,8 +14,8 @@ def get_padding(kernel_size, dilation=1):
 
 
 def convert_pad_shape(pad_shape):
-    layer = pad_shape[::-1]
-    pad_shape = [item for sublist in layer for item in sublist]
+    l = pad_shape[::-1]
+    pad_shape = [item for sublist in l for item in sublist]
     return pad_shape
 
 
@@ -46,18 +46,20 @@ def rand_gumbel_like(x):
 
 
 def slice_segments(x, ids_str, segment_size=4):
-    gather_indices = ids_str.view(x.size(0), 1, 1).repeat(
-        1, x.size(1), 1
-    ) + torch.arange(segment_size, device=x.device)
-    return torch.gather(x, 2, gather_indices)
+    ret = torch.zeros_like(x[:, :, :segment_size])
+    for i in range(x.size(0)):
+        idx_str = ids_str[i]
+        idx_end = idx_str + segment_size
+        ret[i] = x[i, :, idx_str:idx_end]
+    return ret
 
 
 def rand_slice_segments(x, x_lengths=None, segment_size=4):
     b, d, t = x.size()
     if x_lengths is None:
         x_lengths = t
-    ids_str_max = torch.clamp(x_lengths - segment_size + 1, min=0)
-    ids_str = (torch.rand([b], device=x.device) * ids_str_max).to(dtype=torch.long)
+    ids_str_max = x_lengths - segment_size + 1
+    ids_str = (torch.rand([b]).to(device=x.device) * ids_str_max).to(dtype=torch.long)
     ret = slice_segments(x, ids_str, segment_size)
     return ret, ids_str
 
@@ -106,8 +108,8 @@ def fused_add_tanh_sigmoid_multiply(input_a, input_b, n_channels):
 
 
 def convert_pad_shape(pad_shape):
-    layer = pad_shape[::-1]
-    pad_shape = [item for sublist in layer for item in sublist]
+    l = pad_shape[::-1]
+    pad_shape = [item for sublist in l for item in sublist]
     return pad_shape
 
 
@@ -128,6 +130,7 @@ def generate_path(duration, mask):
     duration: [b, 1, t_x]
     mask: [b, 1, t_y, t_x]
     """
+    device = duration.device
 
     b, _, t_y, t_x = mask.shape
     cum_duration = torch.cumsum(duration, -1)

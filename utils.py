@@ -1,65 +1,58 @@
 import os
 import glob
-import argparse
-import logging
 import json
-import shutil
+import torch
+import logging
+import argparse
+import requests
 import subprocess
 import numpy as np
-from huggingface_hub import hf_hub_download
+from tqdm import tqdm
 from scipy.io.wavfile import read
-import torch
-import re
+
 
 MATPLOTLIB_FLAG = False
-
 logger = logging.getLogger(__name__)
+EN_US = os.getenv("LANG") != "zh_CN.UTF-8"
+ZH2EN = {
+    "原理浅讲": "Principle explanation",
+    "输入模式": "Input Mode",
+    "请输入简体中文文案": "Please input the Simplified Chinese text",
+    "首次推理需耗时下载模型，还请耐心等待。": "The first inference takes time to download the model, so be patient.",
+    "角色": "Role",
+    "状态栏": "Status",
+    "语调调节": "Modulation of intonation",
+    "感情调节": "Emotional adjustment",
+    "音素长度": "Phoneme length",
+    "生成时长": "Output duration",
+    "输出音频": "Output Audio",
+    "上传模式": "Upload Mode",
+    "请上传简体中文 TXT 文案": "Please upload a simplified Chinese TXT",
+    "文案提取结果": "Result of TXT extraction",
+    """
+欢迎使用此创空间，此创空间基于 <a href="https://github.com/fishaudio/Bert-VITS2">Bert-vits2</a> 开源项目制作。使用此创空间必须遵守当地相关法律法规，禁止用其从事任何违法犯罪活动。""": """
+Welcome to the Space, which is based on the open source project <a href="https://github.com/fishaudio/Bert-VITS2">Bert-vits2</a>. This Space must be used in accordance with local laws and regulations, prohibiting the use of it for any criminal activities.""",
+}
+
+if EN_US:
+    import huggingface_hub
+
+    MODEL_DIR = huggingface_hub.snapshot_download(
+        "Genius-Society/hoyoTTS",
+        cache_dir="./__pycache__",
+    )
+
+else:
+    import modelscope
+
+    MODEL_DIR = modelscope.snapshot_download(
+        "Genius-Society/hoyoTTS",
+        cache_dir="./__pycache__",
+    )
 
 
-def download_emo_models(mirror, repo_id, model_name):
-    if mirror == "openi":
-        import openi
-
-        openi.model.download_model(
-            "Stardust_minus/Bert-VITS2",
-            repo_id.split("/")[-1],
-            "./emotional",
-        )
-    else:
-        hf_hub_download(
-            repo_id,
-            "pytorch_model.bin",
-            local_dir=model_name,
-            local_dir_use_symlinks=False,
-        )
-
-
-def download_checkpoint(
-    dir_path, repo_config, token=None, regex="G_*.pth", mirror="openi"
-):
-    repo_id = repo_config["repo_id"]
-    f_list = glob.glob(os.path.join(dir_path, regex))
-    if f_list:
-        print("Use existed model, skip downloading.")
-        return
-    if mirror.lower() == "openi":
-        import openi
-
-        kwargs = {"token": token} if token else {}
-        openi.login(**kwargs)
-
-        model_image = repo_config["model_image"]
-        openi.model.download_model(repo_id, model_image, dir_path)
-
-        fs = glob.glob(os.path.join(dir_path, model_image, "*.pth"))
-        for file in fs:
-            shutil.move(file, dir_path)
-        shutil.rmtree(os.path.join(dir_path, model_image))
-    else:
-        for file in ["DUR_0.pth", "D_0.pth", "G_0.pth"]:
-            hf_hub_download(
-                repo_id, file, local_dir=dir_path, local_dir_use_symlinks=False
-            )
+def _L(zh_txt: str):
+    return ZH2EN[zh_txt] if EN_US else zh_txt
 
 
 def load_checkpoint(checkpoint_path, model, optimizer=None, skip_optimizer=False):
@@ -73,6 +66,7 @@ def load_checkpoint(checkpoint_path, model, optimizer=None, skip_optimizer=False
         and checkpoint_dict["optimizer"] is not None
     ):
         optimizer.load_state_dict(checkpoint_dict["optimizer"])
+
     elif optimizer is None and not skip_optimizer:
         # else:      Disable this line if Infer and resume checkpoint,then enable the line upper
         new_opt_dict = optimizer.state_dict()
@@ -84,6 +78,7 @@ def load_checkpoint(checkpoint_path, model, optimizer=None, skip_optimizer=False
     saved_state_dict = checkpoint_dict["model"]
     if hasattr(model, "module"):
         state_dict = model.module.state_dict()
+
     else:
         state_dict = model.state_dict()
 
@@ -91,32 +86,26 @@ def load_checkpoint(checkpoint_path, model, optimizer=None, skip_optimizer=False
     for k, v in state_dict.items():
         try:
             # assert "emb_g" not in k
+            # print("load", k)
             new_state_dict[k] = saved_state_dict[k]
             assert saved_state_dict[k].shape == v.shape, (
                 saved_state_dict[k].shape,
                 v.shape,
             )
-        except:
-            # For upgrading from the old version
-            if "ja_bert_proj" in k:
-                v = torch.zeros_like(v)
-                logger.warn(
-                    f"Seems you are using the old version of the model, the {k} is automatically set to zero for backward compatibility"
-                )
-            else:
-                logger.error(f"{k} is not in the checkpoint")
 
+        except:
+            logger.error("%s is not in the checkpoint" % k)
             new_state_dict[k] = v
 
     if hasattr(model, "module"):
         model.module.load_state_dict(new_state_dict, strict=False)
+
     else:
         model.load_state_dict(new_state_dict, strict=False)
 
     logger.info(
         "Loaded checkpoint '{}' (iteration {})".format(checkpoint_path, iteration)
     )
-
     return model, optimizer, learning_rate, iteration
 
 
@@ -128,8 +117,10 @@ def save_checkpoint(model, optimizer, learning_rate, iteration, checkpoint_path)
     )
     if hasattr(model, "module"):
         state_dict = model.module.state_dict()
+
     else:
         state_dict = model.state_dict()
+
     torch.save(
         {
             "model": state_dict,
@@ -164,6 +155,7 @@ def latest_checkpoint_path(dir_path, regex="G_*.pth"):
     f_list = glob.glob(os.path.join(dir_path, regex))
     f_list.sort(key=lambda f: int("".join(filter(str.isdigit, f))))
     x = f_list[-1]
+    print(x)
     return x
 
 
@@ -176,6 +168,7 @@ def plot_spectrogram_to_numpy(spectrogram):
         MATPLOTLIB_FLAG = True
         mpl_logger = logging.getLogger("matplotlib")
         mpl_logger.setLevel(logging.WARNING)
+
     import matplotlib.pylab as plt
     import numpy as np
 
@@ -185,7 +178,6 @@ def plot_spectrogram_to_numpy(spectrogram):
     plt.xlabel("Frames")
     plt.ylabel("Channels")
     plt.tight_layout()
-
     fig.canvas.draw()
     data = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep="")
     data = data.reshape(fig.canvas.get_width_height()[::-1] + (3,))
@@ -202,6 +194,7 @@ def plot_alignment_to_numpy(alignment, info=None):
         MATPLOTLIB_FLAG = True
         mpl_logger = logging.getLogger("matplotlib")
         mpl_logger.setLevel(logging.WARNING)
+
     import matplotlib.pylab as plt
     import numpy as np
 
@@ -213,10 +206,10 @@ def plot_alignment_to_numpy(alignment, info=None):
     xlabel = "Decoder timestep"
     if info is not None:
         xlabel += "\n\n" + info
+
     plt.xlabel(xlabel)
     plt.ylabel("Encoder timestep")
     plt.tight_layout()
-
     fig.canvas.draw()
     data = np.fromstring(fig.canvas.tostring_rgb(), dtype=np.uint8, sep="")
     data = data.reshape(fig.canvas.get_width_height()[::-1] + (3,))
@@ -232,6 +225,7 @@ def load_wav_to_torch(full_path):
 def load_filepaths_and_text(filename, split="|"):
     with open(filename, encoding="utf-8") as f:
         filepaths_and_text = [line.strip().split(split) for line in f]
+
     return filepaths_and_text
 
 
@@ -245,23 +239,24 @@ def get_hparams(init=True):
         help="JSON file for configuration",
     )
     parser.add_argument("-m", "--model", type=str, required=True, help="Model name")
-
     args = parser.parse_args()
     model_dir = os.path.join("./logs", args.model)
-
     if not os.path.exists(model_dir):
         os.makedirs(model_dir)
 
     config_path = args.config
     config_save_path = os.path.join(model_dir, "config.json")
     if init:
-        with open(config_path, "r", encoding="utf-8") as f:
+        with open(config_path, "r") as f:
             data = f.read()
-        with open(config_save_path, "w", encoding="utf-8") as f:
+
+        with open(config_save_path, "w") as f:
             f.write(data)
+
     else:
-        with open(config_save_path, "r", vencoding="utf-8") as f:
+        with open(config_save_path, "r") as f:
             data = f.read()
+
     config = json.loads(data)
     hparams = HParams(**config)
     hparams.model_dir = model_dir
@@ -284,58 +279,73 @@ def clean_checkpoints(path_to_models="logs/44k/", n_ckpts_to_keep=2, sort_by_tim
         for f in os.listdir(path_to_models)
         if os.path.isfile(os.path.join(path_to_models, f))
     ]
-
-    def name_key(_f):
-        return int(re.compile("._(\\d+)\\.pth").match(_f).group(1))
-
-    def time_key(_f):
-        return os.path.getmtime(os.path.join(path_to_models, _f))
-
+    name_key = lambda _f: int(re.compile("._(\d+)\.pth").match(_f).group(1))
+    time_key = lambda _f: os.path.getmtime(os.path.join(path_to_models, _f))
     sort_key = time_key if sort_by_time else name_key
-
-    def x_sorted(_x):
-        return sorted(
-            [f for f in ckpts_files if f.startswith(_x) and not f.endswith("_0.pth")],
-            key=sort_key,
-        )
-
+    x_sorted = lambda _x: sorted(
+        [f for f in ckpts_files if f.startswith(_x) and not f.endswith("_0.pth")],
+        key=sort_key,
+    )
     to_del = [
         os.path.join(path_to_models, fn)
-        for fn in (
-            x_sorted("G")[:-n_ckpts_to_keep]
-            + x_sorted("D")[:-n_ckpts_to_keep]
-            + x_sorted("WD")[:-n_ckpts_to_keep]
-        )
+        for fn in (x_sorted("G")[:-n_ckpts_to_keep] + x_sorted("D")[:-n_ckpts_to_keep])
     ]
-
-    def del_info(fn):
-        return logger.info(f".. Free up space by deleting ckpt {fn}")
-
-    def del_routine(x):
-        return [os.remove(x), del_info(x)]
-
-    [del_routine(fn) for fn in to_del]
+    del_info = lambda fn: logger.info(f".. Free up space by deleting ckpt {fn}")
+    del_routine = lambda x: [os.remove(x), del_info(x)]
+    rs = [del_routine(fn) for fn in to_del]
+    print(rs)
 
 
 def get_hparams_from_dir(model_dir):
     config_save_path = os.path.join(model_dir, "config.json")
     with open(config_save_path, "r", encoding="utf-8") as f:
         data = f.read()
-    config = json.loads(data)
 
+    config = json.loads(data)
     hparams = HParams(**config)
     hparams.model_dir = model_dir
     return hparams
 
 
-def get_hparams_from_file(config_path):
-    # print("config_path: ", config_path)
-    with open(config_path, "r", encoding="utf-8") as f:
-        data = f.read()
-    config = json.loads(data)
+def download_file(file_url: str):
+    filename = file_url.split("&FilePath=")[-1]
+    if os.path.exists(filename):
+        return filename
 
-    hparams = HParams(**config)
-    return hparams
+    response = requests.get(file_url, stream=True)
+    # 检查请求是否成功
+    if response.status_code == 200:
+        # 获取文件总大小
+        file_size = int(response.headers.get("Content-Length", 0))
+        # 打开文件以写入二进制数据
+        with open(filename, "wb") as file:
+            # 创建进度条
+            progress_bar = tqdm(
+                total=file_size,
+                unit="B",
+                unit_scale=True,
+                desc=f"Downloading {filename}...",
+            )
+            # 以块的形式下载文件
+            for chunk in response.iter_content(chunk_size=8192):
+                if chunk:  # 过滤掉保持连接的新块
+                    file.write(chunk)
+                    progress_bar.update(len(chunk))  # 更新进度条
+
+            progress_bar.close()  # 关闭进度条
+
+        print(f"模型文件 '{file_url}' 下载成功。")
+
+    else:
+        print(f"下载失败，状态码：{response.status_code}")
+
+    return filename
+
+
+def get_hparams_from_url(config_url):
+    response = requests.get(config_url)
+    config = response.json()
+    return HParams(**config)
 
 
 def check_git_hash(model_dir):
@@ -349,7 +359,6 @@ def check_git_hash(model_dir):
         return
 
     cur_hash = subprocess.getoutput("git rev-parse HEAD")
-
     path = os.path.join(model_dir, "githash")
     if os.path.exists(path):
         saved_hash = open(path).read()
@@ -367,10 +376,10 @@ def get_logger(model_dir, filename="train.log"):
     global logger
     logger = logging.getLogger(os.path.basename(model_dir))
     logger.setLevel(logging.DEBUG)
-
     formatter = logging.Formatter("%(asctime)s\t%(name)s\t%(levelname)s\t%(message)s")
     if not os.path.exists(model_dir):
         os.makedirs(model_dir)
+
     h = logging.FileHandler(os.path.join(model_dir, filename))
     h.setLevel(logging.DEBUG)
     h.setFormatter(formatter)
@@ -408,54 +417,3 @@ class HParams:
 
     def __repr__(self):
         return self.__dict__.__repr__()
-
-
-def load_model(model_path, config_path):
-    hps = get_hparams_from_file(config_path)
-    net = SynthesizerTrn(
-        # len(symbols),
-        108,
-        hps.data.filter_length // 2 + 1,
-        hps.train.segment_size // hps.data.hop_length,
-        n_speakers=hps.data.n_speakers,
-        **hps.model,
-    ).to("cpu")
-    _ = net.eval()
-    _ = load_checkpoint(model_path, net, None, skip_optimizer=True)
-    return net
-
-
-def mix_model(
-    network1, network2, output_path, voice_ratio=(0.5, 0.5), tone_ratio=(0.5, 0.5)
-):
-    if hasattr(network1, "module"):
-        state_dict1 = network1.module.state_dict()
-        state_dict2 = network2.module.state_dict()
-    else:
-        state_dict1 = network1.state_dict()
-        state_dict2 = network2.state_dict()
-    for k in state_dict1.keys():
-        if k not in state_dict2.keys():
-            continue
-        if "enc_p" in k:
-            state_dict1[k] = (
-                state_dict1[k].clone() * tone_ratio[0]
-                + state_dict2[k].clone() * tone_ratio[1]
-            )
-        else:
-            state_dict1[k] = (
-                state_dict1[k].clone() * voice_ratio[0]
-                + state_dict2[k].clone() * voice_ratio[1]
-            )
-    for k in state_dict2.keys():
-        if k not in state_dict1.keys():
-            state_dict1[k] = state_dict2[k].clone()
-    torch.save(
-        {"model": state_dict1, "iteration": 0, "optimizer": None, "learning_rate": 0},
-        output_path,
-    )
-
-
-def get_steps(model_path):
-    matches = re.findall(r"\d+", model_path)
-    return matches[-1] if matches else None
