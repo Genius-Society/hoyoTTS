@@ -321,4 +321,4 @@ if __name__ == "__main__":
                 concurrency_limit=4,
             )
 
-    app.launch(css="#gradio-share-link-button-0 { display: none; }")
+    app.launch(css="#gradio-share-link-button-0 { display: none; }", ssr_mode=False)
