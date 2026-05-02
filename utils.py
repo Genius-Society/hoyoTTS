@@ -10,7 +10,6 @@ import numpy as np
 from tqdm import tqdm
 from scipy.io.wavfile import read
 
-
 MATPLOTLIB_FLAG = False
 logger = logging.getLogger(__name__)
 EN_US = os.getenv("LANG") != "zh_CN.UTF-8"
@@ -29,9 +28,7 @@ ZH2EN = {
     "上传模式": "Upload Mode",
     "请上传简体中文 TXT 文案": "Please upload a simplified Chinese TXT",
     "文案提取结果": "Result of TXT extraction",
-    """
-欢迎使用此创空间，此创空间基于 <a href="https://github.com/fishaudio/Bert-VITS2">Bert-vits2</a> 开源项目制作。使用此创空间必须遵守当地相关法律法规，禁止用其从事任何违法犯罪活动。""": """
-Welcome to the Space, which is based on the open source project <a href="https://github.com/fishaudio/Bert-VITS2">Bert-vits2</a>. This Space must be used in accordance with local laws and regulations, prohibiting the use of it for any criminal activities.""",
+    """欢迎使用此创空间，此创空间基于 <a href="https://github.com/fishaudio/Bert-VITS2">Bert-vits2</a> 开源项目制作。使用此创空间必须遵守当地相关法律法规，禁止用其从事任何违法犯罪活动。""": """Welcome to the Space, which is based on the open source project <a href="https://github.com/fishaudio/Bert-VITS2">Bert-vits2</a>. This Space must be used in accordance with local laws and regulations, prohibiting the use of it for any criminal activities.""",
 }
 
 if EN_US:

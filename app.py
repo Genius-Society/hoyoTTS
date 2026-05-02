@@ -211,16 +211,12 @@ if __name__ == "__main__":
     with gr.Blocks() as app:
         gr.Markdown(
             _L(
-                """
-欢迎使用此创空间，此创空间基于 <a href="https://github.com/fishaudio/Bert-VITS2">Bert-vits2</a> 开源项目制作。使用此创空间必须遵守当地相关法律法规，禁止用其从事任何违法犯罪活动。"""
+                """欢迎使用此创空间，此创空间基于 <a href="https://github.com/fishaudio/Bert-VITS2">Bert-vits2</a> 开源项目制作。使用此创空间必须遵守当地相关法律法规，禁止用其从事任何违法犯罪活动。"""
             )
         )
         with gr.Accordion(label=_L("原理浅讲"), open=False):
             gr.HTML(
-                """
-<iframe src="//player.bilibili.com/player.html?bvid=BV1hergYRENX&p=2&autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="100%" style="aspect-ratio: 16 / 9;">
-</iframe>
-"""
+                """<iframe src="//player.bilibili.com/player.html?bvid=BV1hergYRENX&p=2&autoplay=0" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" width="100%" style="aspect-ratio: 16 / 9;"></iframe>"""
             )
 
         with gr.Tab(_L("输入模式")):
