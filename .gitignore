@@ -1,5 +1,3 @@
-*__pycache__*
-*.pth
-*.json
 test.*
-.gradio/*
+*__pycache__*
+rename.sh
