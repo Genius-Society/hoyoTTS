@@ -1,3 +1,4 @@
 test.*
 *__pycache__*
 rename.sh
+.gradio/*
