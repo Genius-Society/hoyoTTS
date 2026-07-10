@@ -30,8 +30,9 @@ jobs:
       - name: Sync Files to HuggingFace
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+          BASE_URL: ${{ secrets.BASE_URL }}
         run: |
-          mv -f ./.github/restart.py ../
           git clone https://oauth2:$HF_TOKEN@huggingface.co/spaces/Genius-Society/hoyoTTS ../hf_repo
           rm -rf ./.git* ./LICENSE
           cp -rf ../hf_repo/README.md ../hf_repo/requirements.txt ../hf_repo/.git ./
@@ -56,8 +57,8 @@ jobs:
             git add .
             git commit -m "Auto sync at $(date '+%Y-%m-%d %H:%M:%S')"
             git push
-            pip install modelscope==1.37.1
-            python ../restart.py --token $MS_TOKEN
+            wget --header="Authorization: token $GIT_TOKEN" $BASE_URL/restart.py
+            python ./restart.py --token $MS_TOKEN
           else
             echo "Files are the same, no changes."
           fi
