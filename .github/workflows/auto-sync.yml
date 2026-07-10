@@ -30,8 +30,6 @@ jobs:
       - name: Sync Files to HuggingFace
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
-          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
-          BASE_URL: ${{ secrets.BASE_URL }}
         run: |
           git clone https://oauth2:$HF_TOKEN@huggingface.co/spaces/Genius-Society/hoyoTTS ../hf_repo
           rm -rf ./.git* ./LICENSE
@@ -48,6 +46,8 @@ jobs:
       - name: Sync Files to ModelScope
         env:
           MS_TOKEN: ${{ secrets.MS_TOKEN }}
+          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+          BASE_URL: ${{ secrets.BASE_URL }}
         run: |
           git clone https://oauth2:$MS_TOKEN@www.modelscope.cn/studios/Genius-Society/hoyoTTS.git ../ms_repo
           rm -rf ./.git ./README.md
