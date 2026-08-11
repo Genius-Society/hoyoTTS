@@ -3,7 +3,7 @@ from text.cleaner import clean_text
 from text import cleaned_text_to_sequence, get_bert
 from models import SynthesizerTrn
 from tqdm import tqdm
-from utils import _L, MODEL_DIR
+from utils import _L, ZERO, MODEL_DIR
 import gradio as gr
 import numpy as np
 import commons
@@ -54,6 +54,7 @@ def get_text(text, language_str, hps):
     return bert, phone, tone, language
 
 
+@ZERO
 def TTS_infer(text, sdp_ratio, noise_scale, noise_scale_w, length_scale, sid):
     global net_g
     bert, phones, tones, lang_ids = get_text(text, "ZH", hps)

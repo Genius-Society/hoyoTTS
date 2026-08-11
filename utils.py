@@ -32,8 +32,10 @@ ZH2EN = {
 }
 
 if EN_US:
+    import spaces
     import huggingface_hub
 
+    ZERO = spaces.GPU
     MODEL_DIR = huggingface_hub.snapshot_download(
         "Genius-Society/hoyoTTS",
         cache_dir="./__pycache__",
@@ -46,6 +48,9 @@ else:
         "Genius-Society/hoyoTTS",
         cache_dir="./__pycache__",
     )
+
+    def ZERO(fn):
+        return fn
 
 
 def _L(zh_txt: str):
