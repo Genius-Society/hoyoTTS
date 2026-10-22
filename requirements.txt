@@ -1,7 +1,7 @@
 amfm_decompy
 av
 cn2an
-huggingface_hub==0.36
+huggingface_hub==1.5
 jieba
 librosa
 matplotlib
